@@ -52,12 +52,12 @@ Essentially, ss-remote is performing Network Address Translation for ss-local.
 
 The following AEAD ciphers are recommended. Compliant Shadowsocks implementations must support AEAD_CHACHA20_POLY1305. Implementations for devices with hardware AES acceleration should also implement AEAD_AES_128_GCM, AEAD_AES_192_GCM, and AEAD_AES_256_GCM.
 
-|Name|	Alias|	Key Size	|Salt Size|	Nonce Size	|Tag Size|
-|----|-------|--------|--|-------|--------|------|
-|AEAD_CHACHA20_POLY1305	|chacha20-ietf-poly1305|	32	|32	|12	|16|
-|AEAD_AES_256_GCM	|aes-256-gcm	|32	|32	|12	|16|
-|AEAD_AES_192_GCM	|aes-192-gcm	|24|	24	|12	|16|
-|AEAD_AES_128_GCM	|aes-128-gcm	|16|	16|	12	|16|
+|Name                   |	Alias          |Key Size|Salt Size|Nonce Size|Tag Size|
+|-----------------------|----------------------|--------|---------|----------|--------|
+|AEAD_CHACHA20_POLY1305	|chacha20-ietf-poly1305|32	|32       |12	     |16      |
+|AEAD_AES_256_GCM	|aes-256-gcm	       |32	|32	  |12        |16      |
+|AEAD_AES_192_GCM	|aes-192-gcm	       |24      |24       |12        |16      |
+|AEAD_AES_128_GCM	|aes-128-gcm           |16      |16       |12        |16      |
 
 Please refer to IANA AEAD registry for naming scheme and specification.
 
@@ -108,7 +108,7 @@ Stream ciphers provide only confidentiality. Data integrity and authenticity is 
 The following stream ciphers provide reasonable confidentiality.
     
 |Name	|Key Size|	IV Length|
-|-|-|-|
+|-------|--------|---------------|
 |aes-128-ctr	|16|	16|
 |aes-192-ctr	|24	|16|
 |aes-256-ctr	|32	|16|
@@ -121,12 +121,13 @@ The following stream ciphers provide reasonable confidentiality.
 |chacha20-ietf|	32|	12|
 
 The following stream ciphers have inherent weaknesses (see discussion at #36). DO NOT USE. Implementors are advised to remove them as soon as possible.
+
 |Name	|Key Size	|IV Length|
-|-|-|-|
-|bf-cfb	|16	|8|
-|chacha20|	32|	8|
-|salsa20|	32|	8|
-|rc4-md5|	16|	16|
+|-------|---------------|---------|
+|bf-cfb	|16	  |8|
+|chacha20|32|	8|
+|salsa20|32|	8|
+|rc4-md5|16|	16|
 
 ## Stream Encryption/Decryption
 

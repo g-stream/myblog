@@ -1,9 +1,8 @@
 +++
-title = "Learning Cmake" 
+title = "Learn Cmake"
 description = ""
 tags = [
-    "cmake",
-    "c/c++"]
+    "cmake","c/c++"]
 date = "2018-04-02"
 categories = [
     "Development",
@@ -11,8 +10,8 @@ categories = [
 ]
 menu = "main"
 +++
+# Learn Cmake 
 
-# Learning Cmake And Programming
 
 - constructors
     - add_executable()
