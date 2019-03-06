@@ -1,16 +1,13 @@
 +++
-title = "Learning Cmake And Progreamming" 
+title = "Learning Cmake" 
 description = ""
 tags = [
-    "go",
-    "golang",
-    "hugo",
-    "development",
-]
+    "cmake",
+    "c/c++"]
 date = "2018-04-02"
 categories = [
     "Development",
-    "golang",
+    "c/c++",
 ]
 menu = "main"
 +++
