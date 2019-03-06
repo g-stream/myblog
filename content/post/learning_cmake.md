@@ -1,5 +1,5 @@
 +++
-title = "Learning Cmake"
+title = "Learning Cmake And Progreamming" 
 description = ""
 tags = [
     "go",
@@ -14,7 +14,8 @@ categories = [
 ]
 menu = "main"
 +++
-#Learning Cmake
+
+# Learning Cmake And Programming
 
 - constructors
     - add_executable()

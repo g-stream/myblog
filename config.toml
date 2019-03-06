@@ -1,6 +1,6 @@
 baseurl = "http://www.llinli.xyz/"
 languageCode = "en-us"
-title = "My Awesome Site"
+title = "llinli's blog"
 theme = "rocktopus"
 GoogleAnalytics = "abcde"
 paginate = 4
@@ -11,35 +11,36 @@ MetaDataFormat = "toml"
     tags = "tags"
     series = "series"
 [author]
-    name = "someperson"
+    name = "llinli"
 [params]
 	# supports either dark or light color scheme
-	colorscheme = "light"
+	colorscheme = "dark"
     # text for the header section
     blogHeader = "<span style=\"font-size: 36px; \">my<b>Site</b></span>"
-    tagline = "something witty"
+    tagline = "recording life"
     # the theme assumes this will be in your static/img directory
-    headerimg = "City-Under-Heat.jpg"
+    headerimg = "hack.jpg"
     # used for the contact page (if you use it)
-    contactEmail = "me@mysite.com"
+    contactEmail = "yl.chen@yandex.com"
     contactTwitter = "me"
 [menu]
     # Menu for the nav bar.
     # Ideal count is 3 items, see demo site for an example
-    [[menu.nav]]
-    identifier = "projects"
-    name       = "projects"
-    url        = "/series"
-    weight     = 0
 
     [[menu.nav]]
     identifier = "code"
     name       = "code"
-    url        = "https://github.com/esell/"
+    url        = "https://github.com/g-stream/"
+    weight     = 0
+
+    [[menu.nav]]
+    identifier = "projects"
+    name       = "projects"
+    url        = "/series"
     weight     = 1
 
     [[menu.nav]]
     identifier = "contact"
     name       = "contact"
-    url        = "/contact"
+    url        = "yl.chen@yandex.com"
     weight     = 2
