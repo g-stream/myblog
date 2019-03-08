@@ -8,31 +8,28 @@ menu = "main"
 +++
 # leveldb source analysis - basic classes and operation
 
-## Iterato
-    定义在include的iterator.h中，是一个抽象类，指定了一组 iterator的接口，如Seek,SeekToFirst等操作。要说的是这里面还有个RegisterCleanup方法，能向iterator中注册CleanupFunction，arg1,arg2三元组构成的算是析构函数吧，在iterator析构时被调用。
-    里面有个CleanupNode cleanup_head_;成员，注册的函数在这里串成单链表。
+## Iterator
+
+定义在include的iterator.h中，是一个抽象类，指定了一组 iterator的接口，如Seek,SeekToFirst等操作。要说的是这里面还有个RegisterCleanup方法，能向iterator中注册CleanupFunction，arg1,arg2三元组构成的算是析构函数吧，在iterator析构时被调用。里面有个CleanupNode cleanup_head_;成员，注册的函数在这里串成单链表。
     
 ## block
 
-    - block的结构：
-
-            |entry0|entry1|...|restarts arrays|num_of_restarts|trailer)
-        - restarts arrays(store the offset of every restart point,以uint32存储)
++ block的结构：
+    
+        |entry0|entry1|...|restarts arrays|num_of_restarts|trailer)
+    + restarts arrays(store the offset of every restart point,以uint32存储)
 
             所以通过restart来跳过从头遍历。
+    + trailer长度为5bytes|type(cmopressed?)(1 byte)|crc(uint32)|
+    + num_of_restarts,以uint32存储    
++ entry的结构：
 
-        - trailer长度为5bytes|type(cmopressed?)(1 byte)|crc(uint32)|
-
-        - num_of_restarts,以uint32存储
-
+        |shared_bytes(varint32)|no_shared(varint32)|value_length(varint32)|unshared key data|value data|
++ trailer的结构：
         
-    - entry的结构：
+    |type (char)是否进行了压缩|crc (uint32)|
 
-            |shared_bytes(varint32)|no_shared(varint32)|value_length(varint32)|unshared key data|value data|
-        trailer的结构：
-        |type (char)是否进行了压缩|crc (uint32)|
-
-    - block iter的实现：
++ block iter的实现：
             
         Next： 存当前entry的长度，加上当前entry的入口即为下个entry的地址。
 
@@ -71,9 +68,9 @@ header
 
     |checksum(4bytes)|length(2bytes)|record_type(1byte)|
     
-    record_type有如下几种：  kZeroType，kFullType，kFirstType，kMiddleType，kLastType。
+record_type有如下几种：  kZeroType，kFullType，kFirstType，kMiddleType，kLastType。
 
-
+## FileMetaData
 通过这些数据格式，我们应该能看出leveldb底层的文件是以什么样的格式存放数据的。相关的代码主要放在table文件夹下，与db的log_writer.h、log_writer.cc中。
 
 每个sst文件中放置一串block文件段，后附有metaindex、blockindex计录其offset与size。sst的inerator具体实现在two_level_iterator.h/cc中大致思想类似去图书馆中找书，先找到对应的书架，后从书架中找到对应的书。sstable文件的元信息封装成FileMetaData定义在version_edit.h中。
@@ -103,22 +100,22 @@ enum FileType {
 };
 ```
 
-- kLogFile：日志文件：[0-9]+.log。
++ kLogFile：日志文件：[0-9]+.log。
 
     leveldb会先将数据写入log中，然后再写入memtable。前缀数字为FileNumber。
-- kDBLockFile： 文件锁。
++ kDBLockFile： 文件锁。
 
     一个db只能同时有一个db实例，故加锁实现主动保护。
-- kTableFile： sstable文件：[0-9]+.sst
++ kTableFile： sstable文件：[0-9]+.sst
 
     层级的sstable数据文件
-- kDescriptorfile： db元信息文件：MANIFEST-[0-9]+ 
++ kDescriptorfile： db元信息文件：MANIFEST-[0-9]+ 
 
     每当db中的状态改变（VersionSet），会将这次改变追加到descriptor文件中。后缀数字为FileNumber。
-- kTempfile： 临时文件：[0-9]+.dbtmp 
++ kTempfile： 临时文件：[0-9]+.dbtmp 
 
     对db做修复时，会产生临时文件。前缀为FileNumber。
-- kInfoLogfile： db运行时打印的日志文件 LOG
++ kInfoLogfile： db运行时打印的日志文件 LOG
 
     db运行时，打印的info日志保存在LOG中。每次重新运行，如果已经存在LOG文件，会将LOG文件重名成LOG.old
 
