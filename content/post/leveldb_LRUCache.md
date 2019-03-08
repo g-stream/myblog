@@ -101,6 +101,7 @@ LRUCache不管需要哈希表来快速查找，还需要链表能够快速插入
 
 1.    lru_
 2.    in_use_
+
 ```
   LRUHandle lru_;      // lru_ 是冷链表，属于冷宫，
 
@@ -109,6 +110,7 @@ LRUCache不管需要哈希表来快速查找，还需要链表能够快速插入
   HandleTable table_; // 哈希表部分已经讲过
 ```
 Ref 函数表示要使用该cache，因此如果对应元素位于冷链表，需要将它从冷链表溢出，链入到热链表：
+
 ```
 void LRUCache::Ref(LRUHandle* e) {
   if (e->refs == 1 && e->in_cache) {  // If on lru_ list, move to in_use_ list.
@@ -131,6 +133,7 @@ void LRUCache::LRU_Append(LRUHandle* list, LRUHandle* e) {
   e->next->prev = e;
 }
 ```
+
 Unref正好相反，表示客户不再访问该元素，需要将引用计数－－，如果彻底没人用了，引用计数为0了，就可以删除这个元素了，如果引用计数为1，则可以将元素打入冷宫，放入到冷链表：
 
 ```
@@ -147,9 +150,11 @@ void LRUCache::Unref(LRUHandle* e) {
   }
 }
 ```
+
 注意，缓存必须要要有容量的概念，超过了容量，缓存必须要踢出某些元素，对于我们这种场景而言，就是从冷链表中踢人。
 
 对于LevelDB而言，插入的时候，会判断是否超过了容量，如果超过了事先规划的容量，就会从冷链表中踢人：
+
 ```
 size_t capacity_; // LRUCache的容量
 size_t usage_;    // 当前使用的容量
@@ -203,7 +208,9 @@ bool LRUCache::FinishErase(LRUHandle* e) {
   return e != NULL;
 }
 ```
+
 我们要重点注意下插入逻辑中的
+
 ```
   if (capacity_ > 0) {
     e->refs++;  // for the cache's reference.
@@ -213,6 +220,7 @@ bool LRUCache::FinishErase(LRUHandle* e) {
     FinishErase(table_.Insert(e));  // 如果是更新的话，需要回收老的元素
   } // else don't cache.  (Tests use capacity_==0 to turn off caching.)
 ```
+
 为什么会调用：
 
 FinishErase(table_.Insert(e));
@@ -236,9 +244,11 @@ FinishErase(table_.Insert(e));
     return old;
   }
 ```
+
 因此LRU的Insert函数内部隐含了更新的操作，会将新的Node加入到Cache中，而老的元素会调用FinishErase函数来决定是移入冷宫还是彻底删除。
 
 最后的最后，看下元素长什么样，就是很坑爹的LRUHandle数据结构，名字太坑爹了，如果叫LRUNode，会好理解很多
+
 ```
 struct LRUHandle {
   void* value;
@@ -264,7 +274,9 @@ struct LRUHandle {
   }
 };
 ```
+
 这里面的next_hash 会链入到哈希表对应的桶对应的链表中，而next和prev，不是在热链表就是在冷链表。
+
 ```
 // LRUHandle数据结构
 
